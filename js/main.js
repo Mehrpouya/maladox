@@ -6,29 +6,44 @@ function mouseOver(_who){
   removeLines();
   window.g_prevMouseOver = _who;
   window.g_interacted = true;
-  var bbox = $(_who)[0].getBoundingClientRect();
-  console.log("lineOffset: ",$(_who).data("offset").x);
-  const center = {
-    x: Math.round(bbox.left + bbox.width / 2),
-    y: Math.round(bbox.top  - bbox.height / 2)
-  };
-  console.table(center);
+
+
   // var moveTo = '"M' + center.x + ' ' + center.y;
   // console.log(moveTo);
   // var elem = '<path class="hadi" clip-rule="evenodd" fill="#69735e" fill-rule="evenodd" d=' + moveTo + ' L500 100 "' + ' stroke="red" stroke-width="3" fill="none" />';
   // console.log("elem", elem);
-  var newLine = createLine(center.x,center.y,center.x+100,center.y-100,"#f00",3);
-  // var newLine = createLine(246.846 , 79.963,center.x+100,center.y+200,"#f00",3);
-  console.log(newLine);
-  $(_who).after(newLine);
+  var newLine = getEyebrow(_who);
+   $(_who).after(newLine);
   startMouseInterval(5000);
   // var svg = container.select(".svg-container").selectAll('svg').data([0]);
   // setTimeout(removeLines,1000);
 }
 //this function calculates where to start drawing the disease name.
-function getNextPosition(){
+function getNextPosition(_who){
+
 
 }
+function getEyebrow(_who){
+
+  var center = getCenter(_who);
+  var lineSetting = $(_who).data("lineSetting");
+  var res = createLine(center.x + lineSetting.xOffset, center.y+ lineSetting.yOffset,center.x+ " " + lineSetting.lineLength,center.y,"#f00",3)
+  console.log("res is +" , res);
+  return res;
+
+}
+
+function getCenter(_who){
+  var bbox = $(_who)[0].getBoundingClientRect();
+  center = {
+    x: Math.round(bbox.left + bbox.width / 2),
+    y: Math.round(bbox.top  - bbox.height / 2)
+  };
+  console.table(center);
+  return center;
+}
+
+
 function createLine  (x1, y1, x2, y2, color, w) {
   var aLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
   aLine.setAttribute('x1', x1);
